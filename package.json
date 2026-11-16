@@ -1,0 +1,8 @@
+{
+  "name": "tkur_jazzerjs", "version": "0.1.0", "description": "Native monotonic stall-aware Jazzer.js fuzzing runtime",
+  "license": "Apache-2.0", "engines": {"node": ">=24 <25"},
+  "main": "runtime/api.js", "bin": {"tkur_jazzerjs": "runtime/cli.js"},
+  "dependencies": {"@jazzer.js/core": "4.0.0"},
+  "bundledDependencies": ["@jazzer.js/core"],
+  "files": ["runtime", "node_modules", "licenses", "README.md", "UPSTREAM.md"]
+}

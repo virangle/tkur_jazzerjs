@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/native-sources.sha256" SOURCE_HASHES)
+foreach(entry IN LISTS SOURCE_HASHES)
+  string(SUBSTRING "${entry}" 0 64 expected)
+  string(SUBSTRING "${entry}" 66 -1 relative)
+  file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/${relative}" actual)
+  if(NOT actual STREQUAL expected)
+    message(FATAL_ERROR "Native source hash mismatch: ${relative}")
+  endif()
+endforeach()

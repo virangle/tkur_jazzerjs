@@ -1,0 +1,231 @@
+diff --git workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerDefs.h workspace/managed/tkur_jazzerjs/native/engine/FuzzerDefs.h
+old mode 100644
+new mode 100755
+index db1f74a..cf8ba91
+--- workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerDefs.h
++++ workspace/managed/tkur_jazzerjs/native/engine/FuzzerDefs.h
+@@ -12,6 +12,7 @@
+ #define LLVM_FUZZER_DEFS_H
+ 
+ #include <cassert>
++#include <atomic>
+ #include <cstddef>
+ #include <cstdint>
+ #include <cstring>
+@@ -48,7 +49,7 @@ uint8_t *ExtraCountersBegin();
+ uint8_t *ExtraCountersEnd();
+ void ClearExtraCounters();
+ 
+-extern bool RunningUserCallback;
++extern std::atomic<bool> RunningUserCallback;
+ 
+ }  // namespace fuzzer
+ 
+diff --git workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerDriver.cpp workspace/managed/tkur_jazzerjs/native/engine/FuzzerDriver.cpp
+index a686d44..533e4de 100755
+--- workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerDriver.cpp
++++ workspace/managed/tkur_jazzerjs/native/engine/FuzzerDriver.cpp
+@@ -920,8 +920,11 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
+     for (auto &Path : *Inputs) {
+       auto StartTime = system_clock::now();
+       Printf("Running: %s\n", Path.c_str());
+-      for (int Iter = 0; Iter < Runs; Iter++)
++      for (int Iter = 0; Iter < Runs; Iter++) {
+         RunOneTest(F, Path.c_str(), Options.MaxLen);
++        // A JS finding requests return so the embedding Promise can reject.
++        if (F->ReturnWasRequested()) return 0;
++      }
+       auto StopTime = system_clock::now();
+       auto MS = duration_cast<milliseconds>(StopTime - StartTime).count();
+       Printf("Executed %s in %ld ms\n", Path.c_str(), (long)MS);
+@@ -931,7 +934,8 @@ int FuzzerDriver(int *argc, char ***argv, UserCallback Callback) {
+            "***       executed the target code on a fixed set of inputs.\n"
+            "***\n");
+     F->PrintFinalStats();
+-    exit(0);
++    // Let Node join the worker and settle its replay Promise, including errors.
++    return 0;
+   }
+ 
+   Options.ForkCorpusGroups = Flags.fork_corpus_groups;
+diff --git workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerInternal.h workspace/managed/tkur_jazzerjs/native/engine/FuzzerInternal.h
+old mode 100644
+new mode 100755
+index f9dbd3e..19c27a3
+--- workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerInternal.h
++++ workspace/managed/tkur_jazzerjs/native/engine/FuzzerInternal.h
+@@ -57,6 +57,7 @@ public:
+   }
+ 
+   size_t getTotalNumberOfRuns() { return TotalNumberOfRuns; }
++  bool ReturnWasRequested() const { return ReturnRequested; }
+ 
+   static void StaticAlarmCallback();
+   static void StaticCrashSignalCallback();
+@@ -123,6 +124,8 @@ private:
+   uint8_t BaseSha1[kSHA1NumBytes];  // Checksum of the base unit.
+ 
+   bool GracefulExitRequested = false;
++  // Jazzer.js callback -2 requests return to the embedding caller.
++  bool ReturnRequested = false;
+ 
+   size_t TotalNumberOfRuns = 0;
+   size_t NumberOfNewUnitsAdded = 0;
+diff --git workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerLoop.cpp workspace/managed/tkur_jazzerjs/native/engine/FuzzerLoop.cpp
+old mode 100644
+new mode 100755
+index 258af55..2b3ca17
+--- workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerLoop.cpp
++++ workspace/managed/tkur_jazzerjs/native/engine/FuzzerLoop.cpp
+@@ -35,12 +35,18 @@
+ #endif
+ #endif
+ 
++namespace libfuzzer { extern void (*PrintCrashingInput)(); }
++
+ namespace fuzzer {
+ static const size_t kMaxUnitSizeToPrint = 256;
+ 
+ thread_local bool Fuzzer::IsMyThread;
+ 
+-bool RunningUserCallback = false;
++std::atomic<bool> RunningUserCallback{false};
++// A zero value means inactive. Atomic monotonic timestamp avoids cross-thread
++// data races when SIGALRM is delivered on Node's main thread.
++static std::atomic<int64_t> ActiveUnitStartNs{0};
++static_assert(std::atomic<int64_t>::is_always_lock_free, "signal timestamp must be lock free");
+ 
+ // Only one Fuzzer per process.
+ static Fuzzer *F;
+@@ -142,6 +148,7 @@ Fuzzer::Fuzzer(UserCallback CB, InputCorpus &Corpus, MutationDispatcher &MD,
+     EF->__sanitizer_set_death_callback(StaticDeathCallback);
+   assert(!F);
+   F = this;
++  libfuzzer::PrintCrashingInput = StaticDeathCallback;
+   TPC.ResetMaps();
+   IsMyThread = true;
+   if (Options.DetectLeaks && EF->__sanitizer_install_malloc_and_free_hooks)
+@@ -279,19 +286,19 @@ void Fuzzer::AlarmCallback() {
+   assert(Options.UnitTimeoutSec > 0);
+   // In Windows and Fuchsia, Alarm callback is executed by a different thread.
+   // NetBSD's current behavior needs this change too.
+-#if !LIBFUZZER_WINDOWS && !LIBFUZZER_NETBSD && !LIBFUZZER_FUCHSIA
+-  if (!InFuzzingThread())
+-    return;
+-#endif
+-  if (!RunningUserCallback)
+-    return; // We have not started running units yet.
+-  size_t Seconds =
+-      duration_cast<seconds>(system_clock::now() - UnitStartTime).count();
++// Jazzer.js runs the engine on a worker and JS on the main thread. SIGALRM
++  // may arrive on either thread; the active callback remains the timed unit.
++  const auto StartNs = ActiveUnitStartNs.load(std::memory_order_acquire);
++  if (!StartNs) return;
++  const auto NowNs = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count();
++  if (NowNs < StartNs) return;
++  size_t Seconds = static_cast<size_t>((NowNs - StartNs) / 1000000000LL);
+   if (Seconds == 0)
+     return;
+   if (Options.Verbosity >= 2)
+     Printf("AlarmCallback %zd\n", Seconds);
+   if (Seconds >= (size_t)Options.UnitTimeoutSec) {
++    if (ActiveUnitStartNs.load(std::memory_order_acquire) != StartNs) return;
+     if (EF->__sanitizer_acquire_crash_state &&
+         !EF->__sanitizer_acquire_crash_state())
+       return;
+@@ -612,16 +619,19 @@ ATTRIBUTE_NOINLINE bool Fuzzer::ExecuteCallback(const uint8_t *Data,
+     UnitStartTime = system_clock::now();
+     TPC.ResetMaps();
+     RunningUserCallback = true;
++    ActiveUnitStartNs.store(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count(), std::memory_order_release);
+     CBRes = CB(DataCopy, Size);
++    ActiveUnitStartNs.store(0, std::memory_order_release);
+     RunningUserCallback = false;
+     UnitStopTime = system_clock::now();
+-    assert(CBRes == 0 || CBRes == -1);
++    assert(CBRes == 0 || CBRes == -1 || CBRes == -2);
+     HasMoreMallocsThanFrees = AllocTracer.Stop();
+   }
+   if (!LooseMemeq(DataCopy, Data, Size))
+     CrashOnOverwrittenData();
+   CurrentUnitSize = 0;
+   delete[] DataCopy;
++  if (CBRes == -2) ReturnRequested = true;
+   return CBRes == 0;
+ }
+ 
+@@ -753,6 +763,7 @@ void Fuzzer::MutateAndTestOne() {
+   for (int i = 0; i < Options.MutateDepth; i++) {
+     if (TotalNumberOfRuns >= Options.MaxNumberOfRuns)
+       break;
++    if (ReturnRequested) return;
+     if (StallExpired()) break;
+     MaybeExitGracefully();
+     size_t NewSize = 0;
+@@ -773,6 +784,7 @@ void Fuzzer::MutateAndTestOne() {
+     bool FoundUniqFeatures = false;
+     bool NewCov = RunOne(CurrentUnitData, Size, /*MayDeleteFile=*/true, &II,
+                          /*ForceAddToCorpus*/ false, &FoundUniqFeatures);
++    if (ReturnRequested) return;
+     TryDetectingAMemoryLeak(CurrentUnitData, Size,
+                             /*DuringInitialCorpusExecution*/ false);
+     if (NewCov) {
+@@ -819,11 +831,13 @@ void Fuzzer::ReadAndExecuteSeedCorpora(std::vector<SizedFile> &CorporaFiles) {
+   // Test the callback with empty input and never try it again.
+   uint8_t dummy = 0;
+   ExecuteCallback(&dummy, 0);
++  if (ReturnRequested) return;
+ 
+   if (CorporaFiles.empty()) {
+     Printf("INFO: A corpus is not provided, starting from an empty corpus\n");
+     Unit U({'\n'}); // Valid ASCII input.
+     RunOne(U.data(), U.size());
++    if (ReturnRequested) return;
+   } else {
+     Printf("INFO: seed corpus: files: %zd min: %zdb max: %zdb total: %zdb"
+            " rss: %zdMb\n",
+@@ -843,6 +857,7 @@ void Fuzzer::ReadAndExecuteSeedCorpora(std::vector<SizedFile> &CorporaFiles) {
+       RunOne(U.data(), U.size(), /*MayDeleteFile*/ false, /*II*/ nullptr,
+              /*ForceAddToCorpus*/ Options.KeepSeed,
+              /*FoundUniqFeatures*/ nullptr);
++      if (ReturnRequested) return;
+       CheckExitOnSrcPosOrItem();
+       TryDetectingAMemoryLeak(U.data(), U.size(),
+                               /*DuringInitialCorpusExecution*/ true);
+@@ -879,6 +894,7 @@ void Fuzzer::Loop(std::vector<SizedFile> &CorporaFiles) {
+            MD.GetRand());
+   TPC.SetFocusFunction(FocusFunctionOrAuto);
+   ReadAndExecuteSeedCorpora(CorporaFiles);
++  if (ReturnRequested) return;
+   Stall.Start(TPC.GetTotalPCCoverage());
+   DFT.Clear();  // No need for DFT any more.
+   TPC.SetPrintNewPCs(Options.PrintNewCovPcs);
+@@ -918,6 +934,7 @@ void Fuzzer::Loop(std::vector<SizedFile> &CorporaFiles) {
+ 
+     // Perform several mutations and runs.
+     MutateAndTestOne();
++    if (ReturnRequested) return;
+ 
+     PurgeAllocator();
+   }
+diff --git workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerTracePC.cpp workspace/managed/tkur_jazzerjs/native/engine/FuzzerTracePC.cpp
+old mode 100644
+new mode 100755
+index 7f4e8ef..b7402ec
+--- workspace/artifacts/github-publish/tkur_libfuzzer/src/FuzzerTracePC.cpp
++++ workspace/managed/tkur_jazzerjs/native/engine/FuzzerTracePC.cpp
+@@ -683,3 +683,14 @@ void __sanitizer_weak_hook_memmem(void *called_pc, const void *s1, size_t len1,
+   fuzzer::TPC.MMT.Add(reinterpret_cast<const uint8_t *>(s2), len2);
+ }
+ }  // extern "C"
++
++// tkur_jazzerjs compatibility for stable JavaScript comparison-site IDs.
++extern "C" ATTRIBUTE_INTERFACE ATTRIBUTE_NO_SANITIZE_ALL ATTRIBUTE_TARGET_POPCNT void
++__sanitizer_cov_trace_const_cmp8_with_pc(uintptr_t pc, uint64_t a, uint64_t b) {
++  fuzzer::TPC.HandleCmp(pc, a, b);
++}
++extern "C" ATTRIBUTE_INTERFACE void
++__sanitizer_cov_trace_pc_indir_with_pc(void *pc, uintptr_t callee) {
++  fuzzer::TPC.HandleCallerCallee(reinterpret_cast<uintptr_t>(pc), callee);
++}
++extern "C" ATTRIBUTE_INTERFACE int TkurJazzerJsCompatibilityVersion() { return 1; }

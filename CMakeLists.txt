@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: Apache-2.0
+cmake_minimum_required(VERSION 3.22)
+project(tkur_jazzerjs VERSION 0.1.0 LANGUAGES CXX)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux" OR NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18 OR NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19)
+  message(FATAL_ERROR "Build with Linux clang++-18")
+endif()
+include(cmake/VerifySources.cmake)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+if(NOT NODE_INCLUDE_DIR)
+  find_program(NODE_EXECUTABLE node REQUIRED)
+  execute_process(COMMAND ${NODE_EXECUTABLE} -p "require('path').resolve(process.execPath,'../../include/node')" OUTPUT_VARIABLE NODE_INCLUDE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
+endif()
+set(NODE_INCLUDE_DIR "${NODE_INCLUDE_DIR}" CACHE PATH "Node API headers")
+set(NODE_ADDON_API_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/headers/node_modules/node-addon-api" CACHE PATH "node-addon-api headers (developer-only dependency)")
+file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS native/engine/Fuzzer*.cpp)
+list(FILTER ENGINE_SOURCES EXCLUDE REGEX "Fuzzer(Main|Interceptors)\\.cpp$")
+add_library(tkur_jazzerjs_engine OBJECT ${ENGINE_SOURCES})
+target_compile_options(tkur_jazzerjs_engine PRIVATE -O2 -g -pthread -fno-sanitize=all -fno-omit-frame-pointer
+  -fno-sanitize-coverage=trace-pc-guard,trace-cmp,inline-8bit-counters,pc-table
+  "-ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}=tkur_jazzerjs"
+  "-ffile-prefix-map=${CMAKE_CURRENT_BINARY_DIR}=tkur_jazzerjs-build")
+file(GLOB ADDON_SOURCES CONFIGURE_DEPENDS native/addon/*.cpp native/addon/shared/*.cpp)
+add_library(tkur_jazzerjs SHARED ${ADDON_SOURCES} $<TARGET_OBJECTS:tkur_jazzerjs_engine>)
+target_include_directories(tkur_jazzerjs PRIVATE ${NODE_INCLUDE_DIR} ${NODE_ADDON_API_DIR} native/engine)
+target_compile_definitions(tkur_jazzerjs PRIVATE NAPI_VERSION=4)
+target_link_libraries(tkur_jazzerjs PRIVATE pthread dl)
+set_target_properties(tkur_jazzerjs PROPERTIES PREFIX "" SUFFIX ".node")

@@ -1,0 +1,4 @@
+{
+ "compilerOptions": {"target":"ES2022","module":"CommonJS","strict":true,"sourceMap":true,"inlineSources":true,"outDir":"../../build/examples/typescript"},
+ "files":["target.ts"]
+}

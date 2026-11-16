@@ -1,0 +1,692 @@
+[
+  {
+    "name": "@babel/code-frame",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-code-frame"
+    }
+  },
+  {
+    "name": "@babel/compat-data",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-compat-data"
+    }
+  },
+  {
+    "name": "@babel/core",
+    "version": "7.29.13",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-core"
+    }
+  },
+  {
+    "name": "@babel/generator",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-generator"
+    }
+  },
+  {
+    "name": "@babel/helper-compilation-targets",
+    "version": "7.29.13",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-compilation-targets"
+    }
+  },
+  {
+    "name": "@babel/helper-globals",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-globals"
+    }
+  },
+  {
+    "name": "@babel/helper-module-imports",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-module-imports"
+    }
+  },
+  {
+    "name": "@babel/helper-module-transforms",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-module-transforms"
+    }
+  },
+  {
+    "name": "@babel/helper-string-parser",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-string-parser"
+    }
+  },
+  {
+    "name": "@babel/helper-validator-identifier",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-validator-identifier"
+    }
+  },
+  {
+    "name": "@babel/helper-validator-option",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helper-validator-option"
+    }
+  },
+  {
+    "name": "@babel/helpers",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-helpers"
+    }
+  },
+  {
+    "name": "@babel/parser",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-parser"
+    }
+  },
+  {
+    "name": "@babel/template",
+    "version": "7.29.7",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-template"
+    }
+  },
+  {
+    "name": "@babel/traverse",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-traverse"
+    }
+  },
+  {
+    "name": "@babel/types",
+    "version": "7.29.14",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/babel/babel.git",
+      "directory": "packages/babel-types"
+    }
+  },
+  {
+    "name": "@istanbuljs/schema",
+    "version": "0.1.6",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/istanbuljs/schema.git"
+    }
+  },
+  {
+    "name": "@jazzer.js/bug-detectors",
+    "version": "4.0.0",
+    "license": "Apache-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/CodeIntelligenceTesting/jazzer.js.git",
+      "directory": "packages/bug-detectors"
+    }
+  },
+  {
+    "name": "@jazzer.js/core",
+    "version": "4.0.0",
+    "license": "Apache-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/CodeIntelligenceTesting/jazzer.js.git",
+      "directory": "packages/core"
+    }
+  },
+  {
+    "name": "@jazzer.js/fuzzer",
+    "version": "4.0.0",
+    "license": "Apache-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git@github.com:CodeIntelligenceTesting/jazzer.js.git",
+      "directory": "packages/fuzzer"
+    }
+  },
+  {
+    "name": "@jazzer.js/hooking",
+    "version": "4.0.0",
+    "license": "Apache-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/CodeIntelligenceTesting/jazzer.js.git",
+      "directory": "packages/hooking"
+    }
+  },
+  {
+    "name": "@jazzer.js/instrumentor",
+    "version": "4.0.0",
+    "license": "Apache-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/CodeIntelligenceTesting/jazzer.js.git",
+      "directory": "packages/instrumentor"
+    }
+  },
+  {
+    "name": "@jridgewell/gen-mapping",
+    "version": "0.3.13",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jridgewell/sourcemaps.git",
+      "directory": "packages/gen-mapping"
+    }
+  },
+  {
+    "name": "@jridgewell/remapping",
+    "version": "2.3.5",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jridgewell/sourcemaps.git",
+      "directory": "packages/remapping"
+    }
+  },
+  {
+    "name": "@jridgewell/resolve-uri",
+    "version": "3.1.3",
+    "license": "MIT",
+    "repository": "https://github.com/jridgewell/resolve-uri"
+  },
+  {
+    "name": "@jridgewell/sourcemap-codec",
+    "version": "1.6.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jridgewell/sourcemaps.git",
+      "directory": "packages/sourcemap-codec"
+    }
+  },
+  {
+    "name": "@jridgewell/trace-mapping",
+    "version": "0.3.31",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jridgewell/sourcemaps.git",
+      "directory": "packages/trace-mapping"
+    }
+  },
+  {
+    "name": "ansi-regex",
+    "version": "5.0.1",
+    "license": "MIT",
+    "repository": "chalk/ansi-regex"
+  },
+  {
+    "name": "ansi-styles",
+    "version": "4.3.0",
+    "license": "MIT",
+    "repository": "chalk/ansi-styles"
+  },
+  {
+    "name": "append-transform",
+    "version": "2.0.0",
+    "license": "MIT",
+    "repository": "istanbuljs/append-transform"
+  },
+  {
+    "name": "baseline-browser-mapping",
+    "version": "2.11.37",
+    "license": "Apache-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/web-platform-dx/baseline-browser-mapping.git"
+    }
+  },
+  {
+    "name": "browserslist",
+    "version": "4.29.5",
+    "license": "MIT",
+    "repository": "browserslist/browserslist"
+  },
+  {
+    "name": "buffer-from",
+    "version": "1.1.2",
+    "license": "MIT",
+    "repository": "LinusU/buffer-from"
+  },
+  {
+    "name": "caniuse-lite",
+    "version": "1.0.30001826",
+    "license": "CC-BY-4.0",
+    "repository": "browserslist/caniuse-lite"
+  },
+  {
+    "name": "cliui",
+    "version": "8.0.1",
+    "license": "ISC",
+    "repository": "yargs/cliui"
+  },
+  {
+    "name": "color-convert",
+    "version": "2.0.1",
+    "license": "MIT",
+    "repository": "Qix-/color-convert"
+  },
+  {
+    "name": "color-name",
+    "version": "1.1.4",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git@github.com:colorjs/color-name.git"
+    }
+  },
+  {
+    "name": "convert-source-map",
+    "version": "2.0.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/thlorenz/convert-source-map.git"
+    }
+  },
+  {
+    "name": "debug",
+    "version": "4.4.3",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/debug-js/debug.git"
+    }
+  },
+  {
+    "name": "default-require-extensions",
+    "version": "3.0.1",
+    "license": "MIT",
+    "repository": "avajs/default-require-extensions"
+  },
+  {
+    "name": "electron-to-chromium",
+    "version": "1.5.486",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Kilian/electron-to-chromium.git"
+    }
+  },
+  {
+    "name": "emoji-regex",
+    "version": "8.0.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/mathiasbynens/emoji-regex.git"
+    }
+  },
+  {
+    "name": "escalade",
+    "version": "3.2.0",
+    "license": "MIT",
+    "repository": "lukeed/escalade"
+  },
+  {
+    "name": "gensync",
+    "version": "1.0.0-beta.2",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/loganfsmyth/gensync.git"
+    }
+  },
+  {
+    "name": "get-caller-file",
+    "version": "2.0.5",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/stefanpenner/get-caller-file.git"
+    }
+  },
+  {
+    "name": "graceful-fs",
+    "version": "4.2.12",
+    "license": "BlueOak-1.0.0",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/isaacs/node-graceful-fs"
+    }
+  },
+  {
+    "name": "has-flag",
+    "version": "4.0.0",
+    "license": "MIT",
+    "repository": "sindresorhus/has-flag"
+  },
+  {
+    "name": "html-escaper",
+    "version": "2.0.2",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/WebReflection/html-escaper.git"
+    }
+  },
+  {
+    "name": "is-fullwidth-code-point",
+    "version": "3.0.0",
+    "license": "MIT",
+    "repository": "sindresorhus/is-fullwidth-code-point"
+  },
+  {
+    "name": "istanbul-lib-coverage",
+    "version": "3.2.2",
+    "license": "BSD-3-Clause",
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/istanbuljs/istanbuljs.git",
+      "directory": "packages/istanbul-lib-coverage"
+    }
+  },
+  {
+    "name": "istanbul-lib-hook",
+    "version": "3.0.0",
+    "license": "BSD-3-Clause",
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/istanbuljs/istanbuljs.git",
+      "directory": "packages/istanbul-lib-hook"
+    }
+  },
+  {
+    "name": "istanbul-lib-instrument",
+    "version": "6.0.3",
+    "license": "BSD-3-Clause",
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/istanbuljs/istanbuljs.git",
+      "directory": "packages/istanbul-lib-instrument"
+    }
+  },
+  {
+    "name": "istanbul-lib-report",
+    "version": "3.0.1",
+    "license": "BSD-3-Clause",
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/istanbuljs/istanbuljs.git",
+      "directory": "packages/istanbul-lib-report"
+    }
+  },
+  {
+    "name": "istanbul-reports",
+    "version": "3.2.0",
+    "license": "BSD-3-Clause",
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/istanbuljs/istanbuljs.git",
+      "directory": "packages/istanbul-reports"
+    }
+  },
+  {
+    "name": "js-tokens",
+    "version": "4.0.0",
+    "license": "MIT",
+    "repository": "lydell/js-tokens"
+  },
+  {
+    "name": "jsesc",
+    "version": "3.1.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/mathiasbynens/jsesc.git"
+    }
+  },
+  {
+    "name": "json5",
+    "version": "2.2.3",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/json5/json5.git"
+    }
+  },
+  {
+    "name": "lru-cache",
+    "version": "5.1.1",
+    "license": "ISC",
+    "repository": "git://github.com/isaacs/node-lru-cache.git"
+  },
+  {
+    "name": "make-dir",
+    "version": "4.0.0",
+    "license": "MIT",
+    "repository": "sindresorhus/make-dir"
+  },
+  {
+    "name": "ms",
+    "version": "2.1.3",
+    "license": "MIT",
+    "repository": "vercel/ms"
+  },
+  {
+    "name": "node-releases",
+    "version": "2.0.64",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/chicoxyzzy/node-releases.git"
+    }
+  },
+  {
+    "name": "picocolors",
+    "version": "1.1.1",
+    "license": "ISC",
+    "repository": "alexeyraspopov/picocolors"
+  },
+  {
+    "name": "proper-lockfile",
+    "version": "4.1.2",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git@github.com:moxystudio/node-proper-lockfile.git"
+    }
+  },
+  {
+    "name": "require-directory",
+    "version": "2.1.1",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/troygoode/node-require-directory.git"
+    }
+  },
+  {
+    "name": "retry",
+    "version": "0.12.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/tim-kos/node-retry.git"
+    }
+  },
+  {
+    "name": "semver",
+    "version": "7.8.6",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/npm/node-semver.git"
+    }
+  },
+  {
+    "name": "semver",
+    "version": "7.8.6",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/npm/node-semver.git"
+    }
+  },
+  {
+    "name": "semver",
+    "version": "6.3.2",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/npm/node-semver.git"
+    }
+  },
+  {
+    "name": "signal-exit",
+    "version": "3.0.7",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/tapjs/signal-exit.git"
+    }
+  },
+  {
+    "name": "source-map",
+    "version": "0.6.1",
+    "license": "BSD-3-Clause",
+    "repository": {
+      "type": "git",
+      "url": "http://github.com/mozilla/source-map.git"
+    }
+  },
+  {
+    "name": "source-map-support",
+    "version": "0.5.21",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/evanw/node-source-map-support"
+    }
+  },
+  {
+    "name": "string-width",
+    "version": "4.2.3",
+    "license": "MIT",
+    "repository": "sindresorhus/string-width"
+  },
+  {
+    "name": "strip-ansi",
+    "version": "6.0.1",
+    "license": "MIT",
+    "repository": "chalk/strip-ansi"
+  },
+  {
+    "name": "strip-bom",
+    "version": "4.0.0",
+    "license": "MIT",
+    "repository": "sindresorhus/strip-bom"
+  },
+  {
+    "name": "supports-color",
+    "version": "7.2.0",
+    "license": "MIT",
+    "repository": "chalk/supports-color"
+  },
+  {
+    "name": "tmp",
+    "version": "0.2.7",
+    "license": "MIT",
+    "repository": "https://github.com/raszi/node-tmp.git"
+  },
+  {
+    "name": "update-browserslist-db",
+    "version": "1.3.4",
+    "license": "MIT",
+    "repository": "browserslist/update-db"
+  },
+  {
+    "name": "wrap-ansi",
+    "version": "7.0.0",
+    "license": "MIT",
+    "repository": "chalk/wrap-ansi"
+  },
+  {
+    "name": "y18n",
+    "version": "5.0.8",
+    "license": "ISC",
+    "repository": "yargs/y18n"
+  },
+  {
+    "name": "yallist",
+    "version": "3.1.1",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/isaacs/yallist.git"
+    }
+  },
+  {
+    "name": "yargs",
+    "version": "17.7.3",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/yargs/yargs.git"
+    }
+  },
+  {
+    "name": "yargs-parser",
+    "version": "21.1.1",
+    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/yargs/yargs-parser.git"
+    }
+  }
+]
